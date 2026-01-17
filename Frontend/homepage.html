@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Job Rater</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
     <p>put info in and get result</p>
@@ -16,7 +17,56 @@
         <label for="resume">Resume:</label>
         <input type="file" id="resume" name="resume" accept=".pdf" required />
         <br />
+        <textarea id="resumeText" name="resumeText" readonly placeholder="Extracted resume text will appear here"></textarea>
+        <br />
         <input type="submit" value="Submit" />
     </form>
+
+    <script>
+        // Set the worker script location
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Handle PDF file selection
+        document.getElementById('resume').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                try {
+                    const pdf = await pdfjsLib.getDocument(event.target.result).promise;
+                    let fullText = '';
+
+                    // Extract text from all pages
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        fullText += pageText + '\n';
+                    }
+
+                    // Display extracted text
+                    document.getElementById('resumeText').value = fullText;
+                } catch (error) {
+                    console.error('Error extracting PDF text:', error);
+                    document.getElementById('resumeText').value = 'Error extracting text from PDF';
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        // Handle form submission
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const jobTitle = document.getElementById('jobTitle').value;
+            const jobDescription = document.getElementById('jobDescription').value;
+            const resumeText = document.getElementById('resumeText').value;
+
+            console.log('Job Title:', jobTitle);
+            console.log('Job Description:', jobDescription);
+            console.log('Resume Text:', resumeText);
+            // Add your form submission logic here
+        });
+    </script>
 </body>
 </html>
