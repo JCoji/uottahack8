@@ -6,3 +6,5 @@ This is the uOttaHack 8 Repo! :)
 2. Dance dance!
 3. Numbered list.
 4. respect chelsea as she is the group leader!
+5. ## CODE CODE CODE CODE
+6. learn how to merge
