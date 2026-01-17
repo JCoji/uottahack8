@@ -1,5 +1,8 @@
-#uOttaHack 8 Project
+# uOttaHack 8 Project
 
 This is the uOttaHack 8 Repo! :)
 
-JV 100 bones wuz here
+1. Let's have fun!
+2. Dance dance!
+3. Numbered list.
+4. ## CODE CODE CODE CODE
